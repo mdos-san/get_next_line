@@ -6,7 +6,7 @@
 /*   By: mdos-san <mdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 18:09:33 by mdos-san          #+#    #+#             */
-/*   Updated: 2015/12/11 19:56:55 by mdos-san         ###   ########.fr       */
+/*   Updated: 2015/12/11 20:11:35 by mdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,18 @@ static void	truncate_str(char ***line, char **st_str, char **tmp)
 	*st_str = *tmp;
 }
 
-int		get_next_line(int const fd, char **line)
+static int	end_file(char ***line, char **st_str)
+{
+	**line = ft_strdup(*st_str);
+	if (ft_strlen(**line) > 0)
+	{
+		ft_strdel(st_str);
+		return (1);
+	}
+	return (0);
+}
+
+int			get_next_line(int const fd, char **line)
 {
 	static char	*st_str = 0;
 	char		*tmp;
@@ -67,19 +78,10 @@ int		get_next_line(int const fd, char **line)
 	tmp = ft_strnew(BUFF_SIZE);
 	while (!ft_strchr(st_str, '\n'))
 	{
-		ret = read(fd, tmp, BUFF_SIZE);
-		if (ret == -1)
+		if ((ret = read(fd, tmp, BUFF_SIZE)) == -1)
 			return (-1);
 		if (ret == 0)
-		{
-			*line = ft_strdup(st_str);
-			if (ft_strlen(*line) > 0)
-			{
-				ft_strdel(&st_str);
-				return (1);
-			}
-			return (0);
-		}
+			return (end_file(&line, &st_str));
 		len += ret;
 		if (!realloc_str(&line, &st_str, &tmp, &len))
 			return (-1);
