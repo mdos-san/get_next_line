@@ -6,7 +6,7 @@
 /*   By: mdos-san <mdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 18:09:33 by mdos-san          #+#    #+#             */
-/*   Updated: 2015/12/11 17:07:01 by mdos-san         ###   ########.fr       */
+/*   Updated: 2015/12/11 17:50:15 by mdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ int		get_next_line(int const fd, char **line)
 		if (ret == 0)
 		{
 			*line = ft_strdup(st_str);
+			if (ft_strlen(*line) > 0)
+			{
+				free(st_str);
+				st_str = NULL;
+				return (1);
+			}
 			return (0);
 		}
 		len += ret;
