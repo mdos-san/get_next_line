@@ -6,7 +6,7 @@
 /*   By: mdos-san <mdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 18:09:33 by mdos-san          #+#    #+#             */
-/*   Updated: 2015/12/11 20:11:35 by mdos-san         ###   ########.fr       */
+/*   Updated: 2015/12/14 14:46:38 by mdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ static int	realloc_str(char ***line, char **st_str, char **tmp, int *len)
 	**line = ft_strdup(*st_str);
 	if (*st_str)
 		free(*st_str);
-	*st_str = (char*)malloc(*len + 1);
-	if (!*st_str)
-		return (0);
+	*st_str = ft_strnew(*len);
 	ft_bzero(*st_str, *len);
 	ft_strcat(*st_str, **line);
 	if (**line)
@@ -76,13 +74,15 @@ int			get_next_line(int const fd, char **line)
 
 	len = ft_strlen(st_str);
 	tmp = ft_strnew(BUFF_SIZE);
+	if (fd < 0 || line == 0)
+		return (-1);
 	while (!ft_strchr(st_str, '\n'))
 	{
 		if ((ret = read(fd, tmp, BUFF_SIZE)) == -1)
 			return (-1);
 		if (ret == 0)
 			return (end_file(&line, &st_str));
-		len += ret;
+		len = len + ret;
 		if (!realloc_str(&line, &st_str, &tmp, &len))
 			return (-1);
 	}
