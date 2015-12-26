@@ -28,14 +28,19 @@ static int	lengt_line(char *str)
 
 static int	realloc_str(char ***line, char **st_str, char **tmp, int *len)
 {
+	if (**line)
+		free(**line);
+	**line = 0;
 	**line = ft_strdup(*st_str);
 	if (*st_str)
 		free(*st_str);
+	*st_str = 0;
 	*st_str = ft_strnew(*len);
 	ft_bzero(*st_str, *len);
 	ft_strcat(*st_str, **line);
 	if (**line)
 		free(**line);
+	**line = 0;
 	ft_strcat(*st_str, *tmp);
 	ft_bzero(*tmp, BUFF_SIZE);
 	return (1);
@@ -43,9 +48,14 @@ static int	realloc_str(char ***line, char **st_str, char **tmp, int *len)
 
 static void	truncate_str(char ***line, char **st_str, char **tmp)
 {
-	free(*tmp);
+	if (*tmp)
+		free(*tmp);
+	*tmp = 0;
 	*tmp = ft_strchr(*st_str, '\n');
 	**tmp = 0;
+	if (**line)
+		free(**line);
+	**line = 0;
 	**line = ft_strdup(*st_str);
 	**tmp = '\n';
 	*tmp = ft_strdup(*st_str + lengt_line(*st_str));
@@ -56,10 +66,15 @@ static void	truncate_str(char ***line, char **st_str, char **tmp)
 
 static int	end_file(char ***line, char **st_str)
 {
+	if (**line)
+		free(**line);
+	**line = 0;
 	**line = ft_strdup(*st_str);
 	if (ft_strlen(**line) > 0)
 	{
-		ft_strdel(st_str);
+		if (*st_str)
+			free(*st_str);
+		*st_str = 0;
 		return (1);
 	}
 	return (0);
