@@ -6,7 +6,7 @@
 /*   By: mdos-san <mdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 18:09:33 by mdos-san          #+#    #+#             */
-/*   Updated: 2015/12/27 17:27:05 by mdos-san         ###   ########.fr       */
+/*   Updated: 2015/12/27 17:42:03 by mdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,33 @@ static int	lengt_line(char *str)
 	return (i + 1);
 }
 
-static int	realloc_str(char ***line, char **st_str, char *buf, int *len)
+static int	realloc_str(char **line, char **st_str, char *buf, int len)
 {
-	**line = ft_strdup(*st_str);
+	*line = ft_strdup(*st_str);
 	ft_strdel(st_str);
-	*st_str = ft_strnew(*len);
-	ft_bzero(*st_str, *len);
-	ft_strcat(*st_str, **line);
-	ft_strdel(*line);
+	*st_str = ft_strnew(len);
+	ft_bzero(*st_str, len);
+	ft_strcat(*st_str, *line);
+	ft_strdel(line);
 	ft_strcat(*st_str, buf);
 	return (1);
 }
 
-static void	truncate_str(char ***line, char **st_str, char **tmp)
+static void	truncate_str(char **line, char **st_str, char **tmp)
 {
 	*tmp = ft_strchr(*st_str, '\n');
 	**tmp = 0;
-	**line = ft_strdup(*st_str);
+	*line = ft_strdup(*st_str);
 	**tmp = '\n';
 	*tmp = ft_strdup(*st_str + lengt_line(*st_str));
 	ft_strdel(st_str);
 	*st_str = *tmp;
 }
 
-static int	end_file(char ***line, char **st_str)
+static int	end_file(char **line, char **st_str)
 {
-	**line = ft_strdup(*st_str);
-	if (ft_strlen(**line) > 0)
+	*line = ft_strdup(*st_str);
+	if (ft_strlen(*line) > 0)
 	{
 		ft_strdel(st_str);
 		return (1);
@@ -78,11 +78,11 @@ int			get_next_line(int const fd, char **line)
 		if ((ret = read(fd, buf, BUFF_SIZE)) == -1)
 			return (-1);
 		if (ret == 0)
-			return (end_file(&line, &st_str));
-		len = len + ret;
-		if (!realloc_str(&line, &st_str, buf, &len))
+			return (end_file(line, &st_str));
+		len += ret;
+		if (!realloc_str(line, &st_str, buf, len))
 			return (-1);
 	}
-	truncate_str(&line, &st_str, &tmp);
+	truncate_str(line, &st_str, &tmp);
 	return (1);
 }
