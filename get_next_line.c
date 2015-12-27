@@ -6,7 +6,7 @@
 /*   By: mdos-san <mdos-san@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 18:09:33 by mdos-san          #+#    #+#             */
-/*   Updated: 2015/12/14 14:46:38 by mdos-san         ###   ########.fr       */
+/*   Updated: 2015/12/27 17:20:24 by mdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,11 @@ static int	lengt_line(char *str)
 static int	realloc_str(char ***line, char **st_str, char **tmp, int *len)
 {
 	**line = ft_strdup(*st_str);
-	if (*st_str)
-		free(*st_str);
+	ft_strdel(st_str);
 	*st_str = ft_strnew(*len);
 	ft_bzero(*st_str, *len);
 	ft_strcat(*st_str, **line);
-	if (**line)
-		free(**line);
+	ft_strdel(*line);
 	ft_strcat(*st_str, *tmp);
 	ft_bzero(*tmp, BUFF_SIZE);
 	return (1);
@@ -49,8 +47,7 @@ static void	truncate_str(char ***line, char **st_str, char **tmp)
 	**line = ft_strdup(*st_str);
 	**tmp = '\n';
 	*tmp = ft_strdup(*st_str + lengt_line(*st_str));
-	if (*st_str)
-		free(*st_str);
+	ft_strdel(st_str);
 	*st_str = *tmp;
 }
 
